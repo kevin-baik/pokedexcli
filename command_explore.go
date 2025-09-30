@@ -4,10 +4,10 @@ import (
     "fmt"
 )
 
-func commandExplore(cfg *config, areaName string) error {
-    fmt.Printf("Exploring %v...\n", areaName)
+func commandExplore(cfg *config, arg string) error {
+    fmt.Printf("Exploring %v...\n", arg)
     
-    encountersInLocationResp, err := cfg.pokeapiClient.ListPokemons(areaName)
+    encountersInLocationResp, err := cfg.pokeapiClient.ListPokemons(arg)
     if err != nil {
 	return err
     }

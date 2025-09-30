@@ -32,7 +32,6 @@ func (c *Cache) Add(key string, value []byte) error {
 	createdAt:  time.Now().UTC(),
 	val:	    value,
     }
-    
     return nil
 }
 
