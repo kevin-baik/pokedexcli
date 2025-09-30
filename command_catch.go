@@ -6,10 +6,10 @@ import (
     "encoding/json"
 )
 
-func commandCatch(cfg *config, arg string) error {
-    fmt.Printf("Throwing a Pokeball at %v...\n", arg)
+func commandCatch(cfg *config, name string) error {
+    fmt.Printf("Throwing a Pokeball at %v...\n", name)
 
-    pokemonResp, err := cfg.pokeapiClient.GetPokemon(arg)
+    pokemonResp, err := cfg.pokeapiClient.GetPokemon(name)
     if err != nil {
 	return err
     }
@@ -27,10 +27,10 @@ func commandCatch(cfg *config, arg string) error {
 	if err != nil {
 	    return err
 	}
-	cfg.pokeapiClient.Pokedex.Add(arg, jsonData)	
-	fmt.Printf("%v was caught!", arg)
+	cfg.pokeapiClient.Pokedex.Add(name, jsonData)	
+	fmt.Printf("%v was caught!\n", name)
     } else {
-	fmt.Printf("%v escaped!\n", arg)
+	fmt.Printf("%v escaped!\n", name)
     }
     return nil
 }

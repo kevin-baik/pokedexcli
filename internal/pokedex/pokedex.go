@@ -3,6 +3,7 @@ package pokedex
 import (
     "sync"
     "time"
+    "fmt"
 )
 
 type Pokedex struct {
@@ -38,4 +39,17 @@ func (p *Pokedex) Get(name string) ([]byte, bool) {
     defer p.mux.RUnlock()
     pokemon, ok := p.myPokemons[name]
     return pokemon.val, ok
+}
+
+func (p *Pokedex) ListAll() ([][]byte, error) {
+    p.mux.RLock()
+    defer p.mux.RUnlock()
+    pokemonList := [][]byte{}
+    if len(p.myPokemons) == 0 {
+	return pokemonList, fmt.Errorf("Pokedex is empty")
+    }
+    for _, pokemon := range p.myPokemons {
+	pokemonList = append(pokemonList, pokemon.val)
+    }
+    return pokemonList, nil
 }

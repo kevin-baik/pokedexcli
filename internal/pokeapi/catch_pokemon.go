@@ -7,8 +7,18 @@ import (
 )
 
 func (c *Client) GetPokemon(pokemon string) (RespPokemon, error) {
-    url := baseURL + "/pokemon/" + pokemon
+    // Check if pokemon exists in pokedex
+    if val, exists := c.Pokedex.Get(pokemon); exists {
+	pokemonResp := RespPokemon{}
+	err := json.Unmarshal(val, &pokemonResp)
+	if err != nil {
+	    return RespPokemon{}, err
+	}
+	return pokemonResp, nil
+    }
 
+    url := baseURL + "/pokemon/" + pokemon
+    // Check if pokemon exists in cache
     if val, exists := c.cache.Get(url); exists {
 	pokemonResp := RespPokemon{}
 	err := json.Unmarshal(val, &pokemonResp)
