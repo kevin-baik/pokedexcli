@@ -7,10 +7,12 @@ import (
     "strings"
 
     "github.com/kevin-baik/pokedexcli/internal/pokeapi"
+    "github.com/kevin-baik/pokedexcli/internal/pokecache"
 )
 
 type config struct {
     pokeapiClient	pokeapi.Client
+    pokeCache		pokecache.Cache
     nextLocationsURL	*string
     prevLocationsURL	*string
 }
@@ -30,9 +32,13 @@ func startRepl(cfg *config) {
 	}
 
 	commandName := words[0]
+	var areaName string
+	if len(words) == 2 {
+	    areaName = words[1]
+	}
 	command, exists := getCommands()[commandName]
 	if exists {
-	    err := command.callback(cfg)
+	    err := command.callback(cfg, areaName)
 	    if err != nil {
 		fmt.Println(err)
 	    }
@@ -53,7 +59,7 @@ func cleanInput(text string) []string {
 type cliCommand struct {
     name        string
     description string
-    callback    func(*config) error
+    callback    func(*config, string) error
 }
 
 
@@ -73,6 +79,11 @@ func getCommands() map[string]cliCommand {
 	    name:        "mapb",
 	    description: "Displays the previous 20 locations",
 	    callback:    commandMapb,
+	},
+	"explore": {
+	    name:        "explore",
+	    description: "List of Pokemon in an area",
+	    callback:    commandExplore,
 	},
 	"exit": {
 	    name:        "exit",
